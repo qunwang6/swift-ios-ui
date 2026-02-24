@@ -174,15 +174,6 @@ extension UIColor {
 let primary = UIColor.colorWithHexString(hex: "#007AFF")
 let dimmed  = UIColor.colorWithHexString(hex: "#212226", alpha: 0.5)
 
-// Define in an AppColor namespace
-enum AppColor {
-    static let primary    = UIColor.colorWithHexString(hex: "#007AFF")
-    static let background = UIColor.colorWithHexString(hex: "#F2F2F7")
-    static let text       = UIColor.colorWithHexString(hex: "#1C1C1E")
-    static let subtext    = UIColor.colorWithHexString(hex: "#8E8E93")
-    static let separator  = UIColor.colorWithHexString(hex: "#C6C6C8")
-}
-
 // ❌ Never do this
 let c1 = UIColor(hexString: "#FF6B35")   // SwiftHEXColors — forbidden
 let c2 = UIColor(hex: "#2C3E50")         // SwiftHEXColors — forbidden
