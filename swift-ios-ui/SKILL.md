@@ -1,6 +1,6 @@
 ---
 name: swift-ios-ui
-description: Build iOS UI screens in Swift (UIKit) from design specs, mockups, screenshots, or descriptions. Use this skill whenever the user wants to create, implement, or recreate any iOS interface, view controller, custom view, table/collection view, popup, alert, or any UIKit-based screen. Always use this skill when the user uploads a UI screenshot and asks to implement it in Swift, or mentions SnapKit, SwiftEntryKit, Kingfisher, SDWebImage, Hue, SwiftyJSON, or any iOS layout task. Covers full screens, individual components, navigation flows, and modal presentations.
+description: Build iOS UI screens in Swift (UIKit) from design specs, mockups, screenshots, or descriptions. Use this skill whenever the user wants to create, implement, or recreate any iOS interface, view controller, custom view, table/collection view, popup, alert, or any UIKit-based screen. Always use this skill when the user uploads a UI screenshot and asks to implement it in Swift, or mentions SnapKit, SwiftEntryKit, Kingfisher, SDWebImage, SwiftyJSON, or any iOS layout task. Covers full screens, individual components, navigation flows, and modal presentations.
 ---
 
 # Swift iOS UI Skill
@@ -14,7 +14,6 @@ Generate production-quality iOS UIKit code from UI designs, screenshots, or desc
 | Layout | [SnapKit](https://github.com/SnapKit/SnapKit) — Auto Layout DSL |
 | Popups / Toasts | [SwiftEntryKit](https://github.com/huri000/SwiftEntryKit) |
 | Image Loading | [Kingfisher](https://github.com/onevcat/Kingfisher) or SDWebImage |
-| Colors | [Hue](https://github.com/zenangst/Hue) + [SwiftHEXColors](https://github.com/thii/SwiftHEXColors) |
 | JSON Parsing | [SwiftyJSON](https://github.com/SwiftyJSON/SwiftyJSON) |
 
 ---
@@ -101,7 +100,7 @@ private func setupConstraints() {
 
 ### Typography — PingFangSC (Always Use This)
 
-> ⚠️ Never use `.systemFont` — always use `UIFont.pingFangSC()` with the extension below.
+> ⚠️ Never use `.systemFont` or raw `UIFont(name:)` strings — always use `.pingFangSC()` via the extension below.
 
 ```swift
 // UIFont+PingFangSC.swift — include this extension in every project
@@ -133,38 +132,64 @@ extension UIFont {
 | Semibold | `.pingFangSC(.semibold, size: n)` | Titles, nav bar, headers |
 
 ```swift
-// ✅ Correct
-titleLabel.font      = .pingFangSC(.semibold, size: 18)
-bodyLabel.font       = .pingFangSC(.regular, size: 14)
-priceLabel.font      = .pingFangSC(.medium, size: 16)
-subtitleLabel.font   = .pingFangSC(.light, size: 13)
+// ✅ Correct — always call the extension method
+titleLabel.font    = .pingFangSC(.semibold, size: 18)
+bodyLabel.font     = .pingFangSC(.regular, size: 14)
+priceLabel.font    = .pingFangSC(.medium, size: 16)
+subtitleLabel.font = .pingFangSC(.light, size: 13)
 
 // ❌ Never do this
 titleLabel.font = .systemFont(ofSize: 18, weight: .semibold)
+titleLabel.font = UIFont(name: "PingFangSC-Semibold", size: 18)  // raw string usage forbidden
 ```
 
 ---
 
-### Colors with Hue + SwiftHEXColors
+### Colors — UIColor.colorWithHexString (Always Use This)
+
+> ⚠️ Never use `UIColor(hexString:)`, `UIColor(hex:)`, Hue, or SwiftHEXColors — always use `UIColor.colorWithHexString(hex:)` via the extension below.
+
 ```swift
-// Hex colors
-let primary = UIColor(hexString: "#FF6B35")        // SwiftHEXColors
-let secondary = UIColor(hex: "#2C3E50")             // SwiftHEXColors
+// UIColor+Hex.swift — include this extension in every project
+extension UIColor {
+    static func colorWithHexString(hex: String, alpha: CGFloat = 1.0) -> UIColor {
+        var hexSanitized = hex.trimmingCharacters(in: .whitespacesAndNewlines)
+        hexSanitized = hexSanitized.hasPrefix("#") ? String(hexSanitized.dropFirst()) : hexSanitized
 
-// Hue utilities
-let lightened = primary.lighten(byAmount: 0.2)      // Hue
-let darkened = primary.darken(byAmount: 0.1)         // Hue
-let withAlpha = primary.alpha(0.5)                   // Hue
+        var rgb: UInt64 = 0
+        Scanner(string: hexSanitized).scanHexInt64(&rgb)
 
-// Define in a Color namespace
-enum AppColor {
-    static let primary    = UIColor(hexString: "#007AFF")
-    static let background = UIColor(hexString: "#F2F2F7")
-    static let text       = UIColor(hexString: "#1C1C1E")
-    static let subtext    = UIColor(hexString: "#8E8E93")
-    static let separator  = UIColor(hexString: "#C6C6C8")
+        let r = CGFloat((rgb & 0xFF0000) >> 16) / 255.0
+        let g = CGFloat((rgb & 0x00FF00) >> 8)  / 255.0
+        let b = CGFloat(rgb & 0x0000FF)          / 255.0
+
+        return UIColor(red: r, green: g, blue: b, alpha: alpha)
+    }
 }
 ```
+
+**Usage:**
+```swift
+// ✅ Correct
+let primary = UIColor.colorWithHexString(hex: "#007AFF")
+let dimmed  = UIColor.colorWithHexString(hex: "#212226", alpha: 0.5)
+
+// Define in an AppColor namespace
+enum AppColor {
+    static let primary    = UIColor.colorWithHexString(hex: "#007AFF")
+    static let background = UIColor.colorWithHexString(hex: "#F2F2F7")
+    static let text       = UIColor.colorWithHexString(hex: "#1C1C1E")
+    static let subtext    = UIColor.colorWithHexString(hex: "#8E8E93")
+    static let separator  = UIColor.colorWithHexString(hex: "#C6C6C8")
+}
+
+// ❌ Never do this
+let c1 = UIColor(hexString: "#FF6B35")   // SwiftHEXColors — forbidden
+let c2 = UIColor(hex: "#2C3E50")         // SwiftHEXColors — forbidden
+let c3 = primary.lighten(byAmount: 0.2)  // Hue — forbidden
+```
+
+---
 
 ### Image Loading with Kingfisher
 ```swift
@@ -366,7 +391,11 @@ final class ProductCell: UITableViewCell {
         containerView.addSubview(thumbImageView)
         containerView.addSubview(titleLabel)
         containerView.addSubview(priceLabel)
-        // style configuration...
+        
+        titleLabel.font  = .pingFangSC(.medium, size: 15)
+        titleLabel.textColor = AppColor.text
+        priceLabel.font  = .pingFangSC(.semibold, size: 16)
+        priceLabel.textColor = AppColor.primary
     }
     
     private func setupConstraints() {
@@ -460,9 +489,9 @@ func showEmptyState(message: String = "暂无数据") {
 
 Before finishing, verify:
 - [ ] No `frame` / `AutoresizingMask` usage — SnapKit only
-- [ ] All fonts use `UIFont.pingFangSC()` — never `.systemFont`
+- [ ] All fonts use `.pingFangSC()` extension — never `.systemFont` or raw `UIFont(name:)` strings
 - [ ] Safe area insets handled (`safeAreaLayoutGuide`)
-- [ ] All colors use `AppColor` enum with hex values
+- [ ] All colors use `UIColor.colorWithHexString(hex:)` via `AppColor` enum — never Hue or SwiftHEXColors
 - [ ] Images use `kf.setImage` with placeholder
 - [ ] `prepareForReuse` cancels Kingfisher tasks in cells
 - [ ] JSON models use `SwiftyJSON` with `init(json: JSON)`
