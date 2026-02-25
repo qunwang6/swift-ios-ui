@@ -100,7 +100,7 @@ private func setupConstraints() {
 
 ### Typography — PingFangSC (Always Use This)
 
-> ⚠️ Never use `.systemFont` or raw `UIFont(name:)` strings — always use `.pingFangSC()` via the extension below.
+> ⚠️ Never use `.systemFont` or raw `UIFont(name:)` strings — always use `.pingFangSC()` via the extension below.`UIFont+PingFangSC.swift` already exists in the project. **Do NOT output this extension definition** in generated code — just call it directly.
 
 ```swift
 // UIFont+PingFangSC.swift — include this extension in every project
@@ -147,7 +147,7 @@ titleLabel.font = UIFont(name: "PingFangSC-Semibold", size: 18)  // raw string u
 
 ### Colors — UIColor.colorWithHexString (Always Use This)
 
-> ⚠️ Never use `UIColor(hexString:)`, `UIColor(hex:)`, Hue, or SwiftHEXColors — always use `UIColor.colorWithHexString(hex:)` via the extension below.
+> ⚠️ Never use `UIColor(hexString:)`, `UIColor(hex:)`, Hue, or SwiftHEXColors — always use `UIColor.colorWithHexString(hex:)` via the extension below.`UIColor+Hex.swift` already exists in the project. **Do NOT output this extension definition** in generated code — just call it directly.
 
 ```swift
 // UIColor+Hex.swift — include this extension in every project
@@ -493,3 +493,4 @@ Before finishing, verify:
 - [ ] Bottom sheets use the **exact** `EKAttributes` config from the Bottom Sheet section (never `EKAttributes.bottomFloat`)
 - [ ] Bottom sheet popup view sets `entryBackground = .clear` and draws its own background
 - [ ] Bottom sheet config includes `safeArea = .overridden` and `verticalOffset = 0`
+- [ ] Do NOT output `extension UIFont` or `extension UIColor` definitions — these extensions already exist in the project
