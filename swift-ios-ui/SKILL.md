@@ -152,7 +152,7 @@ titleLabel.font = UIFont(name: "PingFangSC-Semibold", size: 18)  // raw string u
 ```swift
 // UIColor+Hex.swift — include this extension in every project
 extension UIColor {
-    static func colorWithHexString(hex: String, alpha: CGFloat = 1.0) -> UIColor {
+    static func colorWithHexString(hex: String) -> UIColor {
         var hexSanitized = hex.trimmingCharacters(in: .whitespacesAndNewlines)
         hexSanitized = hexSanitized.hasPrefix("#") ? String(hexSanitized.dropFirst()) : hexSanitized
 
@@ -163,7 +163,7 @@ extension UIColor {
         let g = CGFloat((rgb & 0x00FF00) >> 8)  / 255.0
         let b = CGFloat(rgb & 0x0000FF)          / 255.0
 
-        return UIColor(red: r, green: g, blue: b, alpha: alpha)
+        return UIColor(red: r, green: g, blue: b, alpha: 1.0)
     }
 }
 ```
@@ -172,7 +172,7 @@ extension UIColor {
 ```swift
 // ✅ Correct
 let primary = UIColor.colorWithHexString(hex: "#007AFF")
-let dimmed  = UIColor.colorWithHexString(hex: "#212226", alpha: 0.5)
+let dimmed  = UIColor.colorWithHexString(hex: "#212226").withAlphaComponent(0.5)
 
 // ❌ Never do this
 let c1 = UIColor(hexString: "#FF6B35")   // SwiftHEXColors — forbidden
