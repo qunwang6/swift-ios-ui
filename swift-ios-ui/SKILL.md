@@ -228,6 +228,52 @@ struct UserModel {
 }
 ```
 
+### Localization — LocalizableManager (Always Use This)
+
+> ⚠️ Never use hardcoded strings for UI text — always use `LocalizableManager.localValue("key")`.
+```swift
+// ✅ Correct
+titleLabel.text = LocalizableManager.localValue("register_email")
+
+// ❌ Never do this
+titleLabel.text = "Email"
+titleLabel.text = "邮箱"
+```
+
+When generating any UI text, you must also output the corresponding localization keys and translations for all 3 languages.
+
+**Output format — one table per file:**
+
+| Key | English | Simplified Chinese | Traditional Chinese |
+|---|---|---|---|
+| `register_email` | `"Email"` | `"邮箱"` | `"郵箱"` |
+
+**en.lproj/Localizable.strings**
+```
+"register_email" = "Email";
+```
+
+**zh-Hans.lproj/Localizable.strings**
+```
+"register_email" = "邮箱";
+```
+
+**zh-Hant.lproj/Localizable.strings**
+```
+"register_email" = "郵箱";
+```
+
+**Key naming convention:**
+
+| Pattern | Example |
+|---|---|
+| `{screen}_{element}` | `register_email`, `login_password`, `profile_save_button` |
+| `{screen}_title` | `register_title`, `cart_title` |
+| `{screen}_hint_{field}` | `register_hint_email`, `login_hint_password` |
+| `common_{action}` | `common_confirm`, `common_cancel`, `common_save` |
+
+> ✅ Keys must be lowercase snake_case. Never reuse keys across unrelated screens.
+
 ### SwiftEntryKit — Popups & Toasts
 
 #### Toast / Snackbar
@@ -494,3 +540,6 @@ Before finishing, verify:
 - [ ] Bottom sheet popup view sets `entryBackground = .clear` and draws its own background
 - [ ] Bottom sheet config includes `safeArea = .overridden` and `verticalOffset = 0`
 - [ ] Do NOT output `extension UIFont` or `extension UIColor` definitions — these extensions already exist in the project
+- [ ] All UI strings use `LocalizableManager.localValue("key")` — no hardcoded text
+- [ ] Localization keys follow `{screen}_{element}` naming convention
+- [ ] All 3 language translations are output alongside the code: `en`, `zh-Hans`, `zh-Hant`

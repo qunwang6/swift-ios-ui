@@ -9,10 +9,11 @@
 - 📸 **支持多种输入**：UI 截图 / Figma 描述 / 文字需求，按需生成代码
 - 📐 **SnapKit 布局**：全程使用 Auto Layout DSL，禁止 frame 和 Storyboard
 - 🪟 **底部弹窗**：使用标准 SwiftEntryKit 配置，支持 home indicator 适配
-- 🎨 **规范颜色**：统一使用 `AppColor` enum + HEX 值管理
+- 🎨 **规范颜色**：统一使用 `AppColor` enum + `UIColor.colorWithHexString(hex:)` 管理
 - 🔤 **PingFangSC 字体**：六种字重完整覆盖，禁止使用 systemFont
 - 🖼️ **Kingfisher 图片加载**：含 placeholder、淡入动画、Cell 复用取消
 - 📦 **SwiftyJSON 数据模型**：统一 `init(json: JSON)` 解析范式
+- 🌐 **多语言支持**：统一使用 `LocalizableManager.localValue("key")`，自动输出 EN / 简中 / 繁中 三语翻译
 
 ---
 
@@ -80,6 +81,9 @@ claude
 | `ProductCell.swift` | 自定义列表 Cell |
 | `ProductBottomSheetView.swift` | 底部弹窗视图 |
 | `ProductModel.swift` | SwiftyJSON 数据模型 |
+| `en.lproj/Localizable.strings` | 英文多语言文件 |
+| `zh-Hans.lproj/Localizable.strings` | 简体中文多语言文件 |
+| `zh-Hant.lproj/Localizable.strings` | 繁体中文多语言文件 |
 
 ---
 
@@ -90,7 +94,6 @@ claude
 | 布局 | SnapKit | `pod 'SnapKit'` |
 | 弹窗 / Toast | SwiftEntryKit | `pod 'SwiftEntryKit'` |
 | 图片加载 | Kingfisher | `pod 'Kingfisher'` |
-| 颜色 | Hue + SwiftHEXColors | `pod 'Hue'` / `pod 'SwiftHEXColors'` |
 | JSON 解析 | SwiftyJSON | `pod 'SwiftyJSON'` |
 
 ### Podfile 示例
@@ -102,8 +105,6 @@ target 'YourApp' do
   pod 'SnapKit'
   pod 'SwiftEntryKit', '2.0.0'
   pod 'Kingfisher'
-  pod 'Hue'
-  pod 'SwiftHEXColors'
   pod 'SwiftyJSON'
 end
 ```
@@ -141,11 +142,39 @@ titleLabel.font = .systemFont(ofSize: 18, weight: .semibold)
 
 ```swift
 enum AppColor {
-    static let primary    = UIColor(hexString: "#007AFF")
-    static let background = UIColor(hexString: "#F2F2F7")
-    static let text       = UIColor(hexString: "#1C1C1E")
-    static let subtext    = UIColor(hexString: "#8E8E93")
+    static let primary    = UIColor.colorWithHexString(hex: "#007AFF")
+    static let background = UIColor.colorWithHexString(hex: "#F2F2F7")
+    static let text       = UIColor.colorWithHexString(hex: "#1C1C1E")
+    static let subtext    = UIColor.colorWithHexString(hex: "#8E8E93")
 }
+```
+
+### 多语言
+
+```swift
+// ✅ 正确
+titleLabel.text = LocalizableManager.localValue("register_email")
+
+// ❌ 禁止
+titleLabel.text = "Email"
+titleLabel.text = "邮箱"
+```
+
+每次生成 UI 代码时，同步输出三语翻译文件：
+
+**en.lproj/Localizable.strings**
+```
+"register_email" = "Email";
+```
+
+**zh-Hans.lproj/Localizable.strings**
+```
+"register_email" = "邮箱";
+```
+
+**zh-Hant.lproj/Localizable.strings**
+```
+"register_email" = "郵箱";
 ```
 
 ### 底部弹窗（固定配置）
