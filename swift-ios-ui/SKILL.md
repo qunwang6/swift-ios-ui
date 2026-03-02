@@ -80,19 +80,19 @@ For each screen, produce:
 - Always call `setupUI()` and `setupConstraints()` from `viewDidLoad` (or `init` for UIView)
 - Add subviews in `setupUI()`, define constraints in `setupConstraints()`
 - Never use `frame` or `autoresizingMask` — SnapKit only
-- Use named constants for spacing: `enum Layout { static let margin: CGFloat = 16 }`
+- Write spacing values directly as literals in SnapKit constraints — do NOT define `enum Layout` or extract values to named constants.
 
 ```swift
 // ✅ Correct SnapKit usage
 private func setupConstraints() {
     titleLabel.snp.makeConstraints { make in
-        make.top.equalTo(headerView.snp.bottom).offset(Layout.margin)
-        make.leading.trailing.equalToSuperview().inset(Layout.margin)
+        make.top.equalTo(headerView.snp.bottom).offset(16)
+        make.leading.trailing.equalToSuperview().inset(16)
     }
     
     confirmButton.snp.makeConstraints { make in
-        make.bottom.equalTo(view.safeAreaLayoutGuide).inset(Layout.margin)
-        make.leading.trailing.equalToSuperview().inset(Layout.margin)
+        make.bottom.equalTo(view.safeAreaLayoutGuide).inset(16)
+        make.leading.trailing.equalToSuperview().inset(16)
         make.height.equalTo(50)
     }
 }
@@ -170,6 +170,7 @@ extension UIColor {
 
 **Usage:**
 ```swift
+❌ Do NOT define `enum AppColor` or any named color constants — write hex values inline directly.
 // ✅ Correct
 let primary = UIColor.colorWithHexString(hex: "#007AFF")
 let dimmed  = UIColor.colorWithHexString(hex: "#212226").withAlphaComponent(0.5)
@@ -430,9 +431,9 @@ final class ProductCell: UITableViewCell {
         containerView.addSubview(priceLabel)
         
         titleLabel.font  = .pingFangSC(.medium, size: 15)
-        titleLabel.textColor = AppColor.text
+        titleLabel.textColor = UIColor.colorWithHexString(hex: "#2D2F35")
         priceLabel.font  = .pingFangSC(.semibold, size: 16)
-        priceLabel.textColor = AppColor.primary
+        priceLabel.textColor = UIColor.colorWithHexString(hex: "#149D93")
     }
     
     private func setupConstraints() {
@@ -528,14 +529,14 @@ Before finishing, verify:
 - [ ] No `frame` / `AutoresizingMask` usage — SnapKit only
 - [ ] All fonts use `.pingFangSC()` extension — never `.systemFont` or raw `UIFont(name:)` strings
 - [ ] Safe area insets handled (`safeAreaLayoutGuide`)
-- [ ] All colors use `UIColor.colorWithHexString(hex:)` via `AppColor` enum — never Hue or SwiftHEXColors
+- [ ] All colors use `UIColor.colorWithHexString(hex:)` inline — no `AppColor` enum, never Hue or SwiftHEXColors
 - [ ] Images use `kf.setImage` with placeholder
 - [ ] `prepareForReuse` cancels Kingfisher tasks in cells
 - [ ] JSON models use `SwiftyJSON` with `init(json: JSON)`
 - [ ] Popups use `SwiftEntryKit` (no `UIAlertController` unless truly native alert)
 - [ ] All UI created programmatically (no Storyboard/XIB unless asked)
 - [ ] `// MARK:` sections used for code organization
-- [ ] Spacing values extracted to `enum Layout`
+- [ ] Spacing values written as inline literals — no `enum Layout`
 - [ ] Bottom sheets use the **exact** `EKAttributes` config from the Bottom Sheet section (never `EKAttributes.bottomFloat`)
 - [ ] Bottom sheet popup view sets `entryBackground = .clear` and draws its own background
 - [ ] Bottom sheet config includes `safeArea = .overridden` and `verticalOffset = 0`

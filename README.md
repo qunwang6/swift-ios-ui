@@ -1,102 +1,102 @@
 # swift-ios-ui
 
-> 一个 Claude Code Skill，根据 UI 截图、设计稿或文字描述，自动生成规范的 iOS UIKit Swift 代码。
+> A Claude Code Skill that automatically generates clean iOS UIKit Swift code from UI screenshots, design specs, or text descriptions.
 
 ---
 
-## 特性
+## Features
 
-- 📸 **支持多种输入**：UI 截图 / Figma 描述 / 文字需求，按需生成代码
-- 📐 **SnapKit 布局**：全程使用 Auto Layout DSL，禁止 frame 和 Storyboard
-- 🪟 **底部弹窗**：使用标准 SwiftEntryKit 配置，支持 home indicator 适配
-- 🎨 **规范颜色**：统一使用 `AppColor` enum + `UIColor.colorWithHexString(hex:)` 管理
-- 🔤 **PingFangSC 字体**：六种字重完整覆盖，禁止使用 systemFont
-- 🖼️ **Kingfisher 图片加载**：含 placeholder、淡入动画、Cell 复用取消
-- 📦 **SwiftyJSON 数据模型**：统一 `init(json: JSON)` 解析范式
-- 🌐 **多语言支持**：统一使用 `LocalizableManager.localValue("key")`，自动输出 EN / 简中 / 繁中 三语翻译
+- 📸 **Multiple input types**: UI screenshots / Figma descriptions / text requirements
+- 📐 **SnapKit layout**: Full Auto Layout DSL — no `frame`, no Storyboard
+- 🪟 **Bottom sheets**: Standard SwiftEntryKit config with home indicator support
+- 🎨 **Inline colors**: Hex values written directly via `UIColor.colorWithHexString(hex:)` — no `AppColor` enum
+- 🔤 **PingFangSC fonts**: All six weights supported — `systemFont` is forbidden
+- 🖼️ **Kingfisher image loading**: Placeholder, fade animation, cell reuse cancellation
+- 📦 **SwiftyJSON models**: Unified `init(json: JSON)` parsing pattern
+- 🌐 **Localization**: `LocalizableManager.localValue("key")` with auto-output EN / Simplified Chinese / Traditional Chinese
 
 ---
 
-## 安装
+## Installation
 
-### 方式一：npx 一键安装（推荐）
+### Option 1: npx (recommended)
 
 ```bash
 npx skills add https://github.com/qunwang6/swift-ios-ui
 ```
 
-### 方式二：手动安装
+### Option 2: Manual
 
-将 `swift-ios-ui/SKILL.md` 复制到以下目录：
+Copy `swift-ios-ui/SKILL.md` to one of the following directories:
 
 ```bash
-# 当前项目生效
+# Project-level (current project only)
 your-ios-project/.claude/skills/swift-ios-ui/SKILL.md
 
-# 全局所有项目生效
+# Global (all projects)
 ~/.claude/skills/swift-ios-ui/SKILL.md
 ```
 
 ---
 
-## 使用方式
+## Usage
 
-在 iOS 项目目录下启动 Claude Code，然后直接描述需求：
+Start Claude Code inside your iOS project directory and describe what you need:
 
 ```bash
 cd your-ios-project
 claude
 ```
 
-### 上传截图
+### Upload a screenshot
 
 ```
-帮我根据这张截图实现 Swift 界面
+Implement this Swift screen based on the screenshot
 ```
 
-拖入设计图，Claude 会自动分析布局、颜色、组件，生成完整代码。
+Drop in a design image — Claude will analyze the layout, colors, and components and generate complete code.
 
-### 文字描述
-
-```
-做一个商品详情页：
-- 顶部轮播图
-- 商品名称（semibold 18pt）、价格（medium 16pt）
-- 底部固定"立即购买"按钮
-```
-
-### 底部弹窗
+### Text description
 
 ```
-做一个底部弹窗，包含标题、选项列表和取消按钮
+Build a product detail page:
+- Top image carousel
+- Product name (semibold 18pt), price (medium 16pt)
+- Fixed "Buy Now" button at the bottom
+```
+
+### Bottom sheet
+
+```
+Build a bottom sheet with a title, option list, and cancel button
 ```
 
 ---
 
-## 生成输出示例
+## Generated Output
 
-| 文件 | 说明 |
+| File | Description |
 |---|---|
-| `ProductDetailViewController.swift` | 主界面控制器 |
-| `ProductCell.swift` | 自定义列表 Cell |
-| `ProductBottomSheetView.swift` | 底部弹窗视图 |
-| `ProductModel.swift` | SwiftyJSON 数据模型 |
-| `en.lproj/Localizable.strings` | 英文多语言文件 |
-| `zh-Hans.lproj/Localizable.strings` | 简体中文多语言文件 |
-| `zh-Hant.lproj/Localizable.strings` | 繁体中文多语言文件 |
+| `ProductDetailViewController.swift` | Main view controller |
+| `ProductCell.swift` | Custom table view cell |
+| `ProductBottomSheetView.swift` | Bottom sheet view |
+| `ProductModel.swift` | SwiftyJSON data model |
+| `en.lproj/Localizable.strings` | English localization |
+| `zh-Hans.lproj/Localizable.strings` | Simplified Chinese localization |
+| `zh-Hant.lproj/Localizable.strings` | Traditional Chinese localization |
 
 ---
 
-## 技术栈
+## Tech Stack
 
-| 用途 | 库 | CocoaPods |
+| Purpose | Library | CocoaPods |
 |---|---|---|
-| 布局 | SnapKit | `pod 'SnapKit'` |
-| 弹窗 / Toast | SwiftEntryKit | `pod 'SwiftEntryKit'` |
-| 图片加载 | Kingfisher | `pod 'Kingfisher'` |
-| JSON 解析 | SwiftyJSON | `pod 'SwiftyJSON'` |
+| Layout | SnapKit | `pod 'SnapKit'` |
+| Popups / Toast | SwiftEntryKit | `pod 'SwiftEntryKit'` |
+| Image Loading | Kingfisher | `pod 'Kingfisher'` |
+| JSON Parsing | SwiftyJSON | `pod 'SwiftyJSON'` |
 
-### Podfile 示例
+### Podfile Example
 
 ```ruby
 target 'YourApp' do
@@ -111,11 +111,11 @@ end
 
 ---
 
-## 代码规范说明
+## Code Conventions
 
-### 布局结构
+### File Structure
 
-每个文件统一使用 `MARK` 分区：
+Each file uses consistent `MARK` sections:
 
 ```swift
 // MARK: - Properties
@@ -127,40 +127,64 @@ end
 // MARK: - Helpers
 ```
 
-### 字体
+### Fonts
 
 ```swift
-// ✅ 正确
+// ✅ Correct
 titleLabel.font = .pingFangSC(.semibold, size: 18)
 bodyLabel.font  = .pingFangSC(.regular,  size: 14)
 
-// ❌ 禁止
+// ❌ Forbidden
 titleLabel.font = .systemFont(ofSize: 18, weight: .semibold)
 ```
 
-### 颜色
+### Colors
+
+Write hex values **inline** — do NOT define an `AppColor` enum or any named color constants.
 
 ```swift
+// ✅ Correct — inline hex values
+label.textColor       = UIColor.colorWithHexString(hex: "#2D2F35")
+button.backgroundColor = UIColor.colorWithHexString(hex: "#149D93")
+view.backgroundColor  = UIColor.colorWithHexString(hex: "#F8F8F8")
+
+// ❌ Forbidden — no AppColor enum
 enum AppColor {
-    static let primary    = UIColor.colorWithHexString(hex: "#007AFF")
-    static let background = UIColor.colorWithHexString(hex: "#F2F2F7")
-    static let text       = UIColor.colorWithHexString(hex: "#1C1C1E")
-    static let subtext    = UIColor.colorWithHexString(hex: "#8E8E93")
+    static let primary = UIColor.colorWithHexString(hex: "#149D93")
 }
+label.textColor = AppColor.primary
 ```
 
-### 多语言
+### Layout Spacing
+
+Write spacing values **as inline literals** in SnapKit constraints — do NOT define an `enum Layout`.
 
 ```swift
-// ✅ 正确
+// ✅ Correct — inline literals
+titleLabel.snp.makeConstraints { make in
+    make.top.equalToSuperview().offset(26)
+    make.leading.trailing.equalToSuperview().inset(30)
+}
+
+// ❌ Forbidden — no enum Layout
+enum Layout {
+    static let sideInset: CGFloat = 30
+}
+make.leading.trailing.equalToSuperview().inset(Layout.sideInset)
+```
+
+### Localization
+
+```swift
+// ✅ Correct
 titleLabel.text = LocalizableManager.localValue("register_email")
 
-// ❌ 禁止
+// ❌ Forbidden
 titleLabel.text = "Email"
 titleLabel.text = "邮箱"
 ```
 
-每次生成 UI 代码时，同步输出三语翻译文件：
+Output all three translation files alongside every generated UI file:
 
 **en.lproj/Localizable.strings**
 ```
@@ -177,7 +201,7 @@ titleLabel.text = "邮箱"
 "register_email" = "郵箱";
 ```
 
-### 底部弹窗（固定配置）
+### Bottom Sheet (Fixed Config)
 
 ```swift
 var attributes = EKAttributes()
@@ -197,16 +221,16 @@ attributes.positionConstraints.verticalOffset = 0
 SwiftEntryKit.display(entry: popupView, using: attributes)
 ```
 
-> ⚠️ 底部弹窗不使用 `EKAttributes.bottomFloat`，必须使用以上完整配置。
+> ⚠️ Never use `EKAttributes.bottomFloat` — always use the full config above.
 
 ---
 
-## 文件结构
+## File Structure
 
 ```
 swift-ios-ui/
-├── SKILL.md       # Skill 主文件（Claude Code 读取）
-└── README.md      # 本文件
+├── SKILL.md       # Main skill file (read by Claude Code)
+└── README.md      # This file
 ```
 
 ---
